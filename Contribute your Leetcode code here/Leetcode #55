@@ -1,0 +1,563 @@
+#include <iostream>
+#include <vector>
+#include <bits/stdc++.h>
+using namespace std;
+
+#define endl "\n"
+#define ll long long
+#define lli long long int
+#define vi vector<int>
+#define vll vector<long long>
+#define vs vector<string>
+#define pb push_back
+#define pii pair<int, int>
+#define mp make_pair
+#define mii map<int, int>
+#define pqb priority_queue<int>
+#define pqs priority_queue<int, vi, greater<int>>
+#define setbits(x) __builtin_popcountll(x)
+#define zrobits(x) __builtin_ctzll(x)
+#define mod 1000000007
+#define inf 1e18
+#define ps(x, y) fixed << setprecision(y) << x
+#define mk(arr, n, type) type *arr = new type[n];
+#define w(x)  \
+	int x;    \
+	cin >> x; \
+	while (x--)
+#define debug(x) cout << #x << " " << x << endl;
+#define fast_io                       \
+	ios_base::sync_with_stdio(false); \
+	cin.tie(NULL)
+#define N 1000002
+#define FOR(i, p) for (int i = 0; i < p; i++)
+#define traverse(arr)     \
+	for (auto i : arr)    \
+		cout << i << " "; \
+	cout << endl;
+#define sortV(arr) sort(arr.begin(), arr.end())
+
+// this function converts something to something -> I don't even know
+string convert(string s, string t)
+{
+	int hr = stoi(s.substr(0, 2));
+	int mm = stoi(s.substr(3));
+	int k = stoi(t);
+	int ihr = k / 60;
+	int imm = k % 60;
+
+	hr = (hr + ihr) % 24;
+	mm = (mm + imm) % 60;
+	// debug(hr);
+	// debug(mm);
+
+	string ans = to_string(hr) + to_string(mm);
+	// debug(ans);
+	return ans;
+}
+
+bool checkPalindrome(string str, int i)
+{
+
+	int i2 = (str.length() - i - 1);
+
+	if (i >= (str.length() / 2))
+	{
+		return true;
+	}
+
+	if (str[i] != str[i2])
+	{
+		return false;
+	}
+
+	return checkPalindrome(str, ++i);
+}
+
+vector<ll> getPre(vector<ll> arr, int n)
+{
+	vll pre(n, 0);
+	for (int i = 0; i < n; i++)
+	{
+		if (i == 0)
+			pre[i] = arr[i];
+		else
+			pre[i] = arr[i] + pre[i - 1];
+	}
+	return pre;
+}
+
+vector<ll> getPost(vector<ll> arr, int n)
+{
+	vll post(n, 0);
+	for (int i = n - 1; i >= 0; i--)
+	{
+		if (i == n - 1)
+			post[i] = arr[i];
+		else
+			post[i] = arr[i] + post[i + 1];
+	}
+	return post;
+}
+
+void solve1()
+{
+	int n;
+	cin >> n;
+	vi arr(n);
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	int cost = 0;
+	int i = 1;
+	while (i < n - 1)
+	{
+		int a = max(0, max(arr[i + 1] + 1 - arr[i], arr[i - 1] + 1 - arr[i]));
+		cout << "odd ";
+		debug(a);
+		cost += a;
+		i += 2;
+	}
+	// debug(cost);
+	if (n % 2 == 0)
+	{
+		i = 2;
+		int temp = 0;
+		while (i < n - 1)
+		{
+			int a = max(0, max(arr[i + 1] + 1 - arr[i], arr[i - 1] + 1 - arr[i]));
+			// cout << "odd "; debug(a);
+			temp += a;
+			i += 2;
+		}
+		cost = min(cost, temp);
+		// debug(temp);
+	}
+	cout << cost << endl;
+}
+
+int getCost(vector<int> &arr, int i)
+{
+	return max(0, max(arr[i - 1], arr[i + 1]) - arr[i] + 1);
+}
+
+void solve2()
+{
+
+	int n;
+	cin >> n;
+	vector<int> a(n), b(n);
+	for (int i = 0; i < n; i++)
+		cin >> a[i];
+	for (int i = 0; i < n; i++)
+		cin >> b[i];
+
+	int k = a[0];
+	for (int i = 0; i < n; i++)
+	{
+		if (b[i] == k)
+		{
+			k = i;
+			break;
+		}
+	}
+	debug(k);
+	int ans = min(k, n - k);
+	// debug(ans);
+	if (ans & 1)
+	{
+		cout << (ans / 2) + 1;
+	}
+	else
+		cout << (ans / 2);
+
+	cout << endl;
+}
+
+int oddbitsetnumber(int n)
+{
+	int binaryNum[32];
+
+	// counter for binary array
+	int i = 0;
+	while (n > 0)
+	{
+
+		// storing remainder in binary array
+		binaryNum[i] = n % 2;
+		n = n / 2;
+		i++;
+	}
+
+	// printing binary array in reverse order
+	for (int j = i - 1; j >= 0; j--)
+		cout << binaryNum[j];
+	cout << endl;
+	return 0;
+}
+
+int minJumps(vi arr, int n)
+{
+	// Your code here
+	if (arr[0] == 0)
+		return -1;
+	int ans = 0, max = arr[0], i = 0;
+	while (i < n)
+	{
+
+		for (int j = 0; j <= arr[i]; j++)
+		{
+
+			if (arr[i + j] >= arr[max])
+				max = j;
+		}
+		ans++;
+
+		i = max;
+		max = i + arr[i];
+		if (max >= n - 1)
+			return ans + 1;
+		if (arr[max] == 0)
+			return -1;
+	}
+
+	return ans + 1;
+}
+
+int give(int a)
+{
+	int el = a, cnt = 0;
+	while (el != 0)
+	{
+		cnt++;
+		el /= 10;
+	}
+	return cnt;
+}
+
+void solve()
+{
+
+	// int n; cin >> n;
+	// vi arr(n);
+	// for (int i = 0; i < n; i++) cin >> arr[i];
+
+	// 	set<int> s;
+	// 	s.insert(n);
+	// 	int k = (n & 1) ? (n / 2) + 1 : n / 2;
+	// 	s.insert(k);
+	// 	k = n - k - 1;
+	// 	s.insert(k);
+
+	// 	for(int i = 2; i <= n; i++) {
+	// 		if(s.find(i) == s.end()) cout << i << " ";
+
+	// 	}
+	// 	if(s.find(1) == s.end())
+	// 		cout << 1 << " ";
+	// 	for (auto i : s)
+	// 		cout << i << " " ;
+	// 	cout << endl;
+
+	int ans = 0;
+	// for(int i = 0; i < n; i++)
+	// 	arr[i] = i+1;
+
+	// for(int i = n%2; i < n-2; i+= 2)
+	// 	swap(arr[i], arr[i+1]);
+
+	// if(n%2 == 1)
+	// 	reverse(arr.begin()+1, arr.begin()+n-2);
+
+	// for(auto i : arr)
+	// cout << i << " ";
+	// cout << endl;
+
+	// if(n == 4)
+	// cout << 2 << " " << 1 << " " << 3 << " " << 4 << endl;
+	// else {
+	// 	for(int i = 0; i < n-5; i++) {
+	// 		cout << i + 4 << " ";
+	// 	}
+	// 	cout << 2 << " " << 3 << " " << 1 << " " << (n-1)<< " " << n << endl;
+	// }
+
+	// // cout << n-1 << " " << n << endl;
+
+	int n;
+	cin >> n;
+	vi a(n), b(n);
+	map<int, int> ma, mb;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a[i];
+		ma[a[i]]++;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cin >> b[i];
+		mb[b[i]]++;
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		if (ma[a[i]] >= 1 && mb[a[i]] >= 1)
+			ma[a[i]]--;
+		mb[a[i]]--;
+	}
+
+	map<int, int> ek, du;
+	vector<int> first, second;
+	for (int i = 0; i < n; i++)
+	{
+		if (ma[a[i]] >= 1 && a[i] >= 10)
+		{
+			int k = give(a[i]);
+			ma[a[i]]--;
+			first.pb(k);
+			ek[k]++;
+			ans++;
+		}
+		else if (ma[a[i]] >= 1)
+		{
+			first.pb(a[i]);
+			ma[a[i]]--;
+			ek[a[i]]++;
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		if (mb[b[i]] >= 1 && b[i] >= 10)
+		{
+			int k = give(b[i]);
+			mb[b[i]]--;
+			second.pb(k);
+			du[k]++;
+			ans++;
+		}
+		else if (mb[b[i]] >= 1)
+		{
+			second.pb(b[i]);
+			mb[b[i]]--;
+			du[b[i]]++;
+		}
+	}
+
+	int temp = 0;
+	for (int i = 0; i < first.size(); i++)
+	{
+		if (ek[first[i]] >= 1 && du[first[i]] >= 1)
+		{
+			ek[first[i]]--, du[first[i]]--;
+			temp++;
+		}
+	}
+
+	for (int i = 0; i < first.size(); i++)
+	{
+		if (ek[first[i]] != 0 && first[i] != 1)
+		{
+			ans++;
+			ek[first[i]]--;
+		}
+	}
+
+	for (int i = 0; i < second.size(); i++)
+	{
+
+		if (du[second[i]] != 0 && second[i] != 1)
+		{
+			ans++;
+			du[second[i]]--;
+		}
+	}
+
+	cout << ans << endl;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------
+
+ll findMaxTillK(map<int, ll> m, int k)
+{
+	int mx = INT_MIN;
+	for (auto i : m)
+	{
+		if (i.first >= k)
+			mx = i.second > mx ? i.second : mx;
+	}
+	return mx;
+}
+
+#define mx 1e9
+vector<int> helper(vector<int> arr[], int n, int count)
+{
+	vector<int> diff(n, mx);
+	queue<int> q;
+
+	diff[count] = 0;
+	q.push(count);
+
+	while (!q.empty())
+	{
+		int temp = q.front();
+		q.pop();
+
+		for (auto i : arr[temp])
+		{
+			if (diff[i] > diff[temp] + 1)
+			{
+				diff[i] = diff[temp] + 1;
+				q.push(i);
+			}
+		}
+	}
+
+	return diff;
+}
+
+int dpp[500][1500];
+int helper(vector<int> &arr, int n, int sum)
+{
+	if (sum == 0)
+		return 1;
+	if (n == 0)
+		return 0;
+	if (dpp[n][sum] != -1)
+		return dpp[n][sum];
+
+	if (arr[n - 1] <= sum)
+		return dpp[n][sum] = helper(arr, n - 1, sum - arr[n - 1]);
+	return dpp[n][sum] = helper(arr, n - 1, sum);
+}
+
+void jaiiiiiiShreeeeeeeeeRam()
+{
+	// int n;
+	// cin >> n;
+	// vector<int> arr(n);
+	// for (int i = 0; i < n; i++) cin >> arr[i];
+
+	// int sum = 0;
+	// for(auto i : arr) sum += i;
+
+	// memset(dpp, -1, sizeof(dpp));
+	// // for(int i = 0; i < n+1; i++) dpp[i][0] = 1;
+	// cout << helper(arr, n, sum) << endl;
+
+	// // vector<vector<int>> dp(n+1, vector<int>(sum+1, 0));
+	// // for(int i = 0; i < n+1; i++) dp[i][0] = 1;
+
+	// // for(int i = 1; i < n+1; i++) {
+	// // 	for(int j = 1; j < sum+1; j++) {
+
+	// // 		if(arr[i] <= j)
+	// // 			dp[i][j] = dp[i-1][j] || dp[i-1][j-arr[i-1]];
+	// // 		else
+	// // 			dp[i][j] = dp[i-1][j];
+	// // 	}
+	// // }
+
+	// for(int i = 0; i < n+1; i++) {
+	// 	for(int j = 0; j < sum+1; j++)  {
+	// 		cout << dpp[n][j] << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+
+	int low, high, req;
+	cin >> low >> high >> req;
+
+	req *= 1000;
+	int ans1 = 0;
+	int cur = high;
+	int minCount = 1;
+	while (cur < req)
+	{
+		cur += high;
+		minCount++;
+	}
+
+	if (cur == req)
+		ans1 = minCount;
+
+	debug(cur);
+	debug(minCount);
+}
+
+int getMin(int low, int high, int req)
+{
+
+	ll c1 = req / high;
+
+	if (req % high != 0)
+		c1++;
+	ll cur = (high * c1);
+	debug(cur);
+	while (c1 >= 0)
+	{
+
+		for(int i = 0; cur <= req; i++) {
+			cur += (low * i);
+			if(cur == req) { return c1 + i; }
+		}
+		cur -= high;
+		c1--;
+
+	}
+	debug(c1);
+	return -1;
+
+}
+
+int getMax(int low, int high, int req)
+{
+
+	ll c1 = req / low, c2 = 0;
+
+	if (req % low != 0)
+		c1++;
+	ll cur = (high * c1) + (low * c2);
+	// debug(cur);
+	while (cur >= req)
+	{
+
+		c1--;
+		c2++;
+		cur = (high * c1) + (low * c2);
+	}
+
+	return c1 + c2;
+}
+
+void solve3()
+{
+
+	int low, high, req;
+	cin >> low >> high >> req;
+
+	req *= 1000;
+
+	int minCount = getMin(low, high, req);
+	int maxCount = getMax(low, high, req);
+	// debug(maxCount);
+	debug(minCount);
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------
+
+int32_t
+main()
+{
+	// ios_base::sync_with_stdio(false);
+	// cin.tie(NULL);
+
+	fast_io;
+
+	w(t)
+	{
+		solve3();
+		// jaiiiiiiShreeeeeeeeeRam();
+	}
+	return 0;
+}
