@@ -1,0 +1,29 @@
+//dynamic programming approach for jump game problem [Leetcode #55]
+class Solution {
+    vector<int> dp;  //created a dp
+public:
+    
+    bool possiblefrom(int start,vector<int>& nums){
+        if(start >= nums.size() - 1)
+            return true;
+        
+        if(dp[start] != -1)
+            return dp[start];
+        
+        bool ans = false;
+    
+        for(int jump=nums[start];jump>0;jump--){
+            ans = ans | possiblefrom(start + jump,nums);
+            
+            if(ans)
+                break;
+        }
+        dp[start] = ans;
+        return ans;
+        
+    }
+    bool canJump(vector<int>& nums) {
+        dp.resize(nums.size(),-1);
+        return possiblefrom(0,nums);
+    }
+};
