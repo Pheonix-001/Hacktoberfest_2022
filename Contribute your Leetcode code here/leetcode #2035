@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int minimumDifference(vector<int>& A) {
+        int N = A.size() / 2, sum = accumulate(begin(A), end(A), 0); 
+        vector<vector<int>> left(N + 1), right(N + 1); // left[k] is an array of all sums of left subsets of size `k`.
+        for (int mask = 0; mask < 1 << N; ++mask) { // fill all the left and right sum arrays
+            int k = __builtin_popcount(mask), L = 0, R = 0; 
+            for (int i = 0; i < N; ++i) {
+                if (mask >> i & 1) {
+                    L += A[i];
+                    R += A[i + N];
+                }
+            }
+            left[k].push_back(L);
+            right[k].push_back(R);
+        }
+        for (int k = 0; k <= N; ++k) sort(begin(right[k]), end(right[k])); // sort right[k] for binsary search
+        int ans = min(abs(sum - 2 * left[N][0]), abs(sum - 2 * right[N][0])); // If we pick all N elements from first half or second half
+        for (int k = 1; k <= N; ++k) {
+            auto &v = right[N - k];
+            for (int a : left[k]) {
+                int b = (sum - 2 * a) / 2;
+                auto it = lower_bound(begin(v), end(v), b);
+                if (it != end(v)) ans = min(ans, abs(sum - 2 * (a + *it)));
+                if (it != begin(v)) ans = min(ans, abs(sum - 2 * (a + *prev(it))));
+            }
+        }
+        return ans;
+    }
+};
